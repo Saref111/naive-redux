@@ -1,6 +1,7 @@
 const createStore = function (reducer, initiaState) {
     let currentReducer = reducer
     let currentState = initiaState
+    let listener = () => {}
 
     return {
         getState() {
@@ -8,7 +9,11 @@ const createStore = function (reducer, initiaState) {
         },
         dispatch(action) {
             currentState = currentReducer(currentState, action)
+            listener()
             return action
+        },
+        subscribe(newListener) {
+            listener = newListener
         }
     }
 }
@@ -32,6 +37,15 @@ console.log(st1)
 store.dispatch({type: 'TEST', payload: {
     value: '1'
 }})
+
+store.subscribe(() => {
+    console.log('changed@!!!');
+})
+
 const st2 = store.getState()
 console.log(st1 === st2)
 
+
+store.dispatch({type: 'TEST', payload: {
+    value: '122'
+}})
