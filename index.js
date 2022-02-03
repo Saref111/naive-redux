@@ -14,6 +14,9 @@ const createStore = function (reducer, initiaState) {
         },
         subscribe(newListener) {
             listeners.add(newListener)
+            return () => {
+                listeners.delete(newListener)
+            }
         }
     }
 }
