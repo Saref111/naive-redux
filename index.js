@@ -1,7 +1,7 @@
 const createStore = function (reducer, initiaState) {
     let currentReducer = reducer
     let currentState = initiaState
-    let listener = () => {}
+    let listeners  = new Set()
 
     return {
         getState() {
@@ -9,11 +9,11 @@ const createStore = function (reducer, initiaState) {
         },
         dispatch(action) {
             currentState = currentReducer(currentState, action)
-            listener()
+            listeners.forEach((c)=> c())
             return action
         },
         subscribe(newListener) {
-            listener = newListener
+            listeners.add(newListener)
         }
     }
 }
