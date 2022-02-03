@@ -1,7 +1,7 @@
-const createStore = function (reducer, initiaState) {
+const createStore = (reducer, initiaState) => {
     let currentReducer = reducer
     let currentState = initiaState
-    let listeners  = new Set()
+    const listeners  = new Set()
 
     return {
         getState() {
@@ -9,7 +9,7 @@ const createStore = function (reducer, initiaState) {
         },
         dispatch(action) {
             currentState = currentReducer(currentState, action)
-            listeners.forEach((c)=> c())
+            listeners.forEach((listener)=> listener())
             return action
         },
         subscribe(newListener) {
@@ -21,3 +21,9 @@ const createStore = function (reducer, initiaState) {
     }
 }
 
+const combineReducers = (reducers) => {
+    return (state = {},  action) => Object.keys(reducers).reduce((nextState, key) => {
+        nextState[key] = reducers[key](state[key], action)
+        return nextState
+    }, {})
+}
